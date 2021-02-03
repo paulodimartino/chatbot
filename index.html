@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat</title>
-
-</head>
-<body>
-
-     
-
+  <meta charset = "UTF-8">
+  <title> Demo </title>
+  <script src = "http://code.jquery.com/jquery-2.2.4.min.js"> </script>
     <script src="https://sdk.inbenta.io/chatbot/1.16.0/inbenta-chatbot-sdk.js"></script>
 
 
@@ -22,9 +15,71 @@ var authorization = {
 InbentaChatbotSDK.buildWithDomainCredentials(authorization);   
 
 </script>
-
-
-
-
+ 
+</head>
+<body>
 </body>
 </html>
+<script>
+  initSDK ();
+  function initSDK () {
+    var inbenta_secret = "<inbenta-secret>";
+    var inbenta_key = "<inbenta-key>";
+    var inbenta_token = authPOST (inbenta_key, inbenta_secret, initBot);
+    console.log (inbenta_token);
+  }
+
+  function initBot (inbenta_token, inbenta_key) {
+
+    var InbentaAuth = InbentaChatbotSDK.createFromAccessToken (inbenta_token, inbenta_key);
+    
+    var InbentaConfiguration = {
+        lang: 'en',
+        "respostas": {
+          "answerAttributes": ["ANSWER_TEXT"],
+          "sideBubbleAttributes": ["SIDEBUBBLE_TEXT"]
+        },
+        tipo de usuário: 0,
+        ambiente: "desenvolvimento",
+        lançador: {
+          título:""
+        },
+        rótulos: {
+          en: {
+            'sim claro',
+            'não': 'Não',
+            'generic-error-message': "Ainda estou em treinamento, tente novamente",
+            'insira a pergunta': 'Pergunte-me!',
+            'interface-título': 'ISA 000A',
+            'nome do convidado': 'Você',
+            'help-question': "Olá! Sou o Agente de Suporte da Inbenta v0.1.0, o que posso fazer por você?",
+            'obrigado': 'Obrigado!',
+            'rate-content': 'Eu ajudei?',
+            'form-message': 'Por favor, diga-me como posso melhorar',
+            'enviar': 'Enviar'
+          }
+        }
+      }; 
+    InbentaChatbotSDK.build (InbentaAuth, InbentaConfiguration);
+  }
+
+  function authPOST (inbenta_key, inbenta_secret, callback) {
+    var data = {"segredo": inbenta_secret}; 
+    var xhr = new XMLHttpRequest ();
+    var inbenta_token = "";
+
+    xhr.open ("POST", "https://api.inbenta.io/v1/auth");
+    xhr.setRequestHeader ("content-type", "application / json");
+    xhr.setRequestHeader ("x-inbenta-key", inbenta_key);
+
+    xhr.onreadystatechange = function () {// Chama uma função quando o estado muda.
+    if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+        console.log (JSON.parse (xhr.responseText) .accessToken);
+        inbenta_token = JSON.parse (xhr.responseText) .accessToken;
+        inbenta_token = JSON.stringify (inbenta_token);
+        retorno de chamada (inbenta_token, inbenta_key);
+        return inbenta_token;
+    }};
+    xhr.send (JSON.stringify (dados));
+  }
+</script>
